@@ -1,0 +1,536 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Every Dollar Minneapolis</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: a working envelope ledger — sticky summary strip, tabbed sections, two-column form grids that stack on phones */
+:root{
+  --bg:#EDF1F0; --surface:#FFFFFF; --ink:#13232B; --muted:#56666C; --line:#CED8D7;
+  --accent:#0B6B66; --accent-ink:#FFFFFF; --accent-soft:#D6ECE9;
+  --good:#1D7A3E; --warn:#A35F00; --bad:#B42318; --warn-soft:#FBEBD2; --bad-soft:#FBE1DE;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Public Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1A1E; --surface:#16252B; --ink:#E4ECEB; --muted:#98A9AC; --line:#2A3D44;
+  --accent:#4FC2B8; --accent-ink:#06201E; --accent-soft:#163C3B;
+  --good:#5BC983; --warn:#E8A84A; --bad:#F2796B; --warn-soft:#3A2C14; --bad-soft:#3D1D1A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1A1E; --surface:#16252B; --ink:#E4ECEB; --muted:#98A9AC; --line:#2A3D44;
+  --accent:#4FC2B8; --accent-ink:#06201E; --accent-soft:#163C3B;
+  --good:#5BC983; --warn:#E8A84A; --bad:#F2796B; --warn-soft:#3A2C14; --bad-soft:#3D1D1A; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+header.top{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px;margin-bottom:14px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(28px,5vw,40px);line-height:1.05;margin:0;letter-spacing:-.01em;text-wrap:balance}
+h1 span{color:var(--accent)}
+.sub{color:var(--muted);margin:6px 0 0;max-width:60ch}
+h2{font-family:var(--display);font-weight:600;font-size:22px;margin:0 0 4px;text-wrap:balance}
+h3{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px;font-weight:700}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.example{display:inline-flex;align-items:center;gap:8px;background:var(--warn-soft);color:var(--warn);font-size:13px;font-weight:600;padding:6px 10px;border-radius:6px}
+.example[hidden]{display:none!important}
+.example button{all:unset;cursor:pointer;text-decoration:underline}
+.strip{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--ink);color:var(--bg);border-radius:10px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;overflow:hidden;margin-bottom:14px}
+.strip div{padding:10px 14px;background:var(--ink)}
+.strip small{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.7}
+.strip b{font-family:var(--mono);font-size:20px;font-weight:600}
+.strip .zero b{color:var(--accent)}
+@media (max-width:640px){.strip{grid-template-columns:repeat(2,minmax(0,1fr))}.strip b{font-size:17px}}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;border-bottom:2px solid var(--line);margin-bottom:18px}
+nav.tabs button{font:600 14px var(--body);color:var(--muted);background:none;border:0;padding:10px 14px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-color:var(--accent)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.panel{display:grid;gap:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+label.f{display:grid;gap:4px;font-size:13px;font-weight:600;min-width:0}
+label.f .hint{font-weight:400;color:var(--muted);font-size:12px}
+input,select{font:500 15px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;width:100%;min-width:0}
+input[type=number]{font-family:var(--mono)}
+.money{position:relative}
+.money::before{content:"$";position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-family:var(--mono)}
+.money input{padding-left:22px}
+.seg{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg button{flex:1;font:600 13px var(--body);padding:8px;border:0;background:var(--bg);color:var(--muted);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.calc{display:grid;gap:6px;margin-top:4px}
+.row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px dashed var(--line)}
+.row:last-child{border:0}
+.row.total{font-weight:700;border-top:2px solid var(--ink);border-bottom:0;padding-top:10px}
+.two{display:grid;grid-template-columns:1.2fr 1fr;gap:18px}
+@media (max-width:760px){.two{grid-template-columns:1fr}}
+.tips{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.tips li{padding:10px 12px;border-radius:6px;background:var(--accent-soft);font-size:14px}
+.tips li.w{background:var(--warn-soft)}
+.note{font-size:12px;color:var(--muted);margin:8px 0 0}
+/* budget table */
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:560px}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);text-align:left;padding:8px 6px;border-bottom:2px solid var(--line)}
+td{padding:6px;border-bottom:1px solid var(--line);vertical-align:middle}
+td.n{text-align:right}
+tr.wall td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
+.tag{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:4px;background:var(--accent-soft);color:var(--accent);margin-left:6px;white-space:nowrap}
+.pill{font-size:12px;font-weight:600;padding:2px 8px;border-radius:99px;white-space:nowrap}
+.pill.ok{color:var(--good);background:color-mix(in srgb,var(--good) 14%,transparent)}
+.pill.hi{color:var(--bad);background:var(--bad-soft)}
+.pill.lo{color:var(--muted);background:var(--bg)}
+td input{padding:6px 8px}
+td .money input{width:110px}
+.x{all:unset;cursor:pointer;color:var(--muted);padding:4px 8px;border-radius:4px}
+.x:hover{color:var(--bad)}
+.btn{font:600 14px var(--body);background:var(--accent);color:var(--accent-ink);border:0;border-radius:6px;padding:9px 14px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.left{font-family:var(--display);font-size:28px;font-weight:800}
+.left.zero{color:var(--good)} .left.over{color:var(--bad)} .left.under{color:var(--warn)}
+/* steps */
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.step{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:start;padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.step .no{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:20px;border:2px solid var(--line);color:var(--muted)}
+.step.now{border-color:var(--accent)} .step.now .no{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.step.done .no{background:var(--good);border-color:var(--good);color:var(--surface)}
+.step b{display:block;font-size:16px}
+.step p{margin:2px 0 0;color:var(--muted);font-size:14px}
+.bar{height:10px;border-radius:99px;background:var(--bg);border:1px solid var(--line);overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+/* resources */
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.res article{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:6px;align-content:start}
+.res .k{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);font-weight:700}
+.res b{font-size:16px}
+.res p{margin:0;font-size:14px;color:var(--muted)}
+.res .ph{font-family:var(--mono);font-weight:600;user-select:all}
+a{color:var(--accent)}
+.order{counter-reset:o;list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.order li{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px 12px;background:var(--bg);border-radius:6px}
+.order li::before{counter-increment:o;content:counter(o);font-family:var(--mono);font-weight:600;color:var(--accent);margin-right:8px}
+.order li span:first-of-type{flex:1;min-width:0}
+footer{margin-top:28px;font-size:12px;color:var(--muted);max-width:75ch}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Every Dollar <span>Minneapolis</span></h1>
+      <p class="sub">A zero-based budget built on Dave Ramsey's Baby Steps, tuned for households earning $30,000 a year or less in the Twin Cities.</p>
+    </div>
+    <div class="example" id="exampleFlag">Example numbers shown. Replace them with yours. <button id="clearAll" type="button">Start blank</button></div>
+  </header>
+
+  <div class="strip" role="status" aria-live="polite">
+    <div><small>Take-home / month</small><b id="sTake">$0</b></div>
+    <div><small>Budgeted</small><b id="sBud">$0</b></div>
+    <div class="zero"><small>Left to assign</small><b id="sLeft">$0</b></div>
+    <div><small>Baby Step</small><b id="sStep">1</b></div>
+  </div>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-tab="profile" aria-selected="true">1 · About you</button>
+    <button role="tab" data-tab="budget" aria-selected="false">2 · Monthly budget</button>
+    <button role="tab" data-tab="steps" aria-selected="false">3 · Baby Steps</button>
+    <button role="tab" data-tab="debt" aria-selected="false">4 · Debt snowball</button>
+    <button role="tab" data-tab="help" aria-selected="false">Help nearby</button>
+  </nav>
+
+  <!-- PROFILE -->
+  <section class="panel" id="tab-profile">
+    <div class="two">
+      <div class="card">
+        <h2>About you</h2>
+        <p class="note" style="margin:0 0 14px">These numbers set your take-home pay, which every other page uses.</p>
+        <h3>Household</h3>
+        <div class="grid">
+          <label class="f">Your age<input id="age" type="number" min="14" max="110" inputmode="numeric"></label>
+          <label class="f">People in household<input id="household" type="number" min="1" max="15" inputmode="numeric"></label>
+          <label class="f">Children under 17<input id="kids" type="number" min="0" max="12" inputmode="numeric"></label>
+          <label class="f">Tax filing status
+            <select id="filing"><option value="single">Single</option><option value="hoh">Head of household</option><option value="mfj">Married filing jointly</option></select></label>
+          <label class="f">Housing
+            <select id="housing"><option value="rent">Renting</option><option value="subsidized">Subsidized / Section 8</option><option value="own">Own (mortgage)</option><option value="family">Living with family</option><option value="shelter">Shelter / unstable</option></select></label>
+          <label class="f">Car?
+            <select id="car"><option value="no">No, I use transit</option><option value="paid">Yes, paid off</option><option value="loan">Yes, with a loan</option></select></label>
+        </div>
+        <h3 style="margin-top:20px">Work &amp; pay</h3>
+        <div class="grid">
+          <label class="f">Job / occupation<input id="job" type="text" placeholder="e.g. Home health aide"></label>
+          <label class="f">How you're paid
+            <select id="payType"><option value="hourly">Hourly</option><option value="salary">Salary</option><option value="gig">Gig / self-employed</option></select></label>
+          <label class="f" data-pay="hourly">Hourly wage<span class="money"><input id="wage" type="number" step="0.25" min="0"></span><span class="hint">Minneapolis minimum is $16.37/hr in 2026</span></label>
+          <label class="f" data-pay="hourly">Hours per week<input id="hours" type="number" min="0" max="80"></label>
+          <label class="f" data-pay="salary">Yearly salary (before taxes)<span class="money"><input id="salary" type="number" min="0" step="100"></span></label>
+          <label class="f" data-pay="gig">Average monthly gig income<span class="money"><input id="gig" type="number" min="0" step="10"></span><span class="hint">Before taxes, after app fees</span></label>
+          <label class="f">Tips or second job / month<span class="money"><input id="tips" type="number" min="0" step="10"></span></label>
+          <label class="f">Benefits / support / month<span class="money"><input id="other" type="number" min="0" step="10"></span><span class="hint">SNAP, SSI, child support. Not taxed here.</span></label>
+        </div>
+        <h3 style="margin-top:20px">Taxes &amp; paycheck deductions</h3>
+        <div class="grid">
+          <div class="f" style="font-size:13px;font-weight:600;display:grid;gap:4px">Tax rate
+            <div class="seg" role="group" aria-label="Tax rate method">
+              <button type="button" id="taxAuto" aria-pressed="true">Estimate for me</button>
+              <button type="button" id="taxManual" aria-pressed="false">I'll enter it</button>
+            </div></div>
+          <label class="f" id="taxRateWrap" hidden>Total tax rate (%)<input id="taxRate" type="number" min="0" max="50" step="0.1"><span class="hint">Federal + MN + Social Security/Medicare</span></label>
+          <label class="f">Health insurance / month<span class="money"><input id="health" type="number" min="0" step="5"></span><span class="hint">Taken out of your paycheck</span></label>
+          <label class="f">Retirement contribution (%)<input id="retire" type="number" min="0" max="50" step="0.5"><span class="hint">Ramsey pauses this during Steps 1–3</span></label>
+        </div>
+      </div>
+
+      <div class="panel" style="align-content:start">
+        <div class="card">
+          <h2>Your paycheck</h2>
+          <div class="calc" id="payCalc"></div>
+          <p class="note" id="taxNote"></p>
+        </div>
+        <div class="card">
+          <h2>Things that apply to you</h2>
+          <ul class="tips" id="tips"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BUDGET -->
+  <section class="panel" id="tab-budget" hidden>
+    <div class="card">
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:end">
+        <div>
+          <h2>Give every dollar a job</h2>
+          <p class="note" style="margin:0">Income minus outgo equals zero. Fill the Four Walls first: food, utilities, shelter, transportation.</p>
+        </div>
+        <div style="text-align:right"><small class="note" style="margin:0">Left to assign</small><div class="left num" id="leftBig">$0</div></div>
+      </div>
+      <div class="tablewrap" style="margin-top:14px">
+        <table>
+          <thead><tr><th>Category</th><th>Planned / month</th><th>Ramsey guide</th><th>Share of take-home</th><th></th></tr></thead>
+          <tbody id="budgetRows"></tbody>
+        </table>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+        <button class="btn ghost" id="addCat" type="button">Add a category</button>
+      </div>
+      <p class="note">Ramsey's guide ranges are percentages of take-home pay. On a tight income, housing often runs above 25%. That is common in Minneapolis and a reason to look at the housing help on the Help nearby tab.</p>
+    </div>
+  </section>
+
+  <!-- STEPS -->
+  <section class="panel" id="tab-steps" hidden>
+    <div class="card">
+      <h2>The 7 Baby Steps</h2>
+      <p class="note" style="margin:0 0 14px">Do them in order. Your current step is highlighted.</p>
+      <div class="grid" style="margin-bottom:16px">
+        <label class="f">Cash saved for emergencies right now<span class="money"><input id="saved" type="number" min="0" step="10"></span></label>
+        <label class="f">I'm currently on step
+          <select id="stepOverride"><option value="auto">Figure it out for me</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select></label>
+      </div>
+      <ol class="steps" id="stepList"></ol>
+    </div>
+  </section>
+
+  <!-- DEBT -->
+  <section class="panel" id="tab-debt" hidden>
+    <div class="two">
+      <div class="card">
+        <h2>Your debts</h2>
+        <p class="note" style="margin:0 0 12px">List everything except the house. The snowball pays smallest balance first, no matter the interest rate.</p>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Debt</th><th>Balance</th><th>Min. payment</th><th>Rate %</th><th></th></tr></thead>
+            <tbody id="debtRows"></tbody>
+          </table>
+        </div>
+        <div style="margin-top:12px"><button class="btn ghost" id="addDebt" type="button">Add a debt</button></div>
+      </div>
+      <div class="card">
+        <h2>Snowball plan</h2>
+        <div class="calc" id="snowSum"></div>
+        <h3 style="margin-top:16px">Pay off in this order</h3>
+        <ol class="order" id="snowOrder"></ol>
+        <p class="note">Extra payment comes from the "Debt snowball (extra)" line in your budget. Finish Baby Step 1 first.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HELP -->
+  <section class="panel" id="tab-help" hidden>
+    <div>
+      <h2>Help nearby</h2>
+      <p class="note" style="margin:0 0 12px">Free programs in Minneapolis and Hennepin County that stretch a small income. Many households under $30,000 qualify for several of these.</p>
+    </div>
+    <div class="res" id="resList"></div>
+  </section>
+
+  <footer>Tax figures are rough estimates for 2026 using standard deductions and do not include refundable credits like the Earned Income Tax Credit or the Minnesota Child Tax Credit, which can put money back in your pocket at tax time. This tool is for planning only and is not financial, legal, or tax advice. Your numbers stay in this browser.</footer>
+</div>
+
+<script>
+(function(){
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const fmt=n=>(n<0?"−$":"$")+Math.abs(Math.round(n)).toLocaleString("en-US");
+const KEY="every-dollar-mpls-v1";
+
+const EXAMPLE={
+  example:true,
+  age:34,household:2,kids:1,filing:"hoh",housing:"rent",car:"no",
+  job:"Grocery stocker",payType:"hourly",wage:16.5,hours:32,salary:0,gig:0,tips:0,other:180,
+  taxMode:"auto",taxRate:10,health:85,retire:0,saved:340,stepOverride:"auto",
+  budget:[
+    {name:"Rent",cat:"housing",amt:1150},
+    {name:"Groceries",cat:"food",amt:420},
+    {name:"Electric + gas",cat:"utilities",amt:110},
+    {name:"Phone",cat:"utilities",amt:35},
+    {name:"Internet",cat:"utilities",amt:30},
+    {name:"Metro Transit (TAP $1 fares)",cat:"transport",amt:45},
+    {name:"Kids & school",cat:"personal",amt:60},
+    {name:"Household & hygiene",cat:"personal",amt:45},
+    {name:"Giving",cat:"giving",amt:20},
+    {name:"Emergency fund",cat:"saving",amt:40},
+    {name:"Debt snowball (extra)",cat:"debt",amt:0},
+    {name:"Fun money",cat:"fun",amt:15}
+  ],
+  debts:[
+    {name:"Medical bill",bal:420,min:25,rate:0},
+    {name:"Credit card",bal:1850,min:55,rate:28.9},
+    {name:"Payday / online loan",bal:600,min:90,rate:0}
+  ]
+};
+const BLANK={example:false,age:"",household:1,kids:0,filing:"single",housing:"rent",car:"no",job:"",payType:"hourly",wage:"",hours:"",salary:"",gig:"",tips:"",other:"",taxMode:"auto",taxRate:"",health:"",retire:"",saved:"",stepOverride:"auto",
+  budget:[{name:"Rent",cat:"housing",amt:""},{name:"Groceries",cat:"food",amt:""},{name:"Utilities",cat:"utilities",amt:""},{name:"Transportation",cat:"transport",amt:""},{name:"Giving",cat:"giving",amt:""},{name:"Emergency fund",cat:"saving",amt:""},{name:"Debt snowball (extra)",cat:"debt",amt:""}],
+  debts:[]};
+
+// Ramsey percentages of take-home
+const CATS={
+  food:{label:"Food",lo:10,hi:15,wall:true},
+  utilities:{label:"Utilities",lo:5,hi:10,wall:true},
+  housing:{label:"Housing",lo:25,hi:25,wall:true},
+  transport:{label:"Transportation",lo:10,hi:10,wall:true},
+  giving:{label:"Giving",lo:10,hi:10},
+  saving:{label:"Saving",lo:10,hi:10},
+  debt:{label:"Debt",lo:0,hi:100},
+  health:{label:"Health",lo:5,hi:10},
+  insurance:{label:"Insurance",lo:10,hi:25},
+  personal:{label:"Personal",lo:5,hi:10},
+  fun:{label:"Recreation",lo:5,hi:10},
+  misc:{label:"Misc.",lo:5,hi:10}
+};
+
+let S;
+try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
+if(!S||!S.budget) S=JSON.parse(JSON.stringify(EXAMPLE));
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const v=x=>{const n=parseFloat(x);return isFinite(n)?n:0};
+
+// ---------- tax ----------
+function estimateTax(gross){
+  const fs=S.filing, kids=v(S.kids);
+  const fedStd={single:16100,hoh:24150,mfj:32200}[fs];
+  const fed10={single:12400,hoh:17700,mfj:24800}[fs];
+  const mnStd={single:15300,hoh:23000,mfj:30600}[fs];
+  const pretax=v(S.health)*12 + gross*v(S.retire)/100;
+  const taxable=Math.max(0,gross-pretax-fedStd);
+  let fed=Math.min(taxable,fed10)*.10+Math.max(0,taxable-fed10)*.12;
+  fed=Math.max(0,fed-2200*kids);
+  const mn=Math.max(0,gross-pretax-mnStd)*.0535;
+  const fica=(gross-v(S.health)*12)*.0765;
+  return {fed,mn,fica,total:fed+mn+fica};
+}
+function pay(){
+  let gross=0;
+  if(S.payType==="hourly") gross=v(S.wage)*v(S.hours)*52;
+  else if(S.payType==="salary") gross=v(S.salary);
+  else gross=v(S.gig)*12;
+  gross+=v(S.tips)*12;
+  let tax;
+  if(S.taxMode==="manual"){const t=gross*v(S.taxRate)/100;tax={total:t}}
+  else{
+    tax=estimateTax(gross);
+    if(S.payType==="gig"){tax.fica=v(S.gig)*12*.9235*.153+v(S.tips)*12*.0765;tax.total=tax.fed+tax.mn+tax.fica}
+  }
+  const health=v(S.health)*12, retire=gross*v(S.retire)/100;
+  const net=gross-tax.total-health-retire;
+  const take=Math.max(0,net/12)+v(S.other);
+  return {gross,tax,health,retire,take,rate:gross?tax.total/gross*100:0};
+}
+
+// ---------- tabs ----------
+$$("nav.tabs button").forEach(b=>b.addEventListener("click",()=>{
+  $$("nav.tabs button").forEach(x=>x.setAttribute("aria-selected",x===b));
+  $$("section.panel").forEach(p=>p.hidden=p.id!=="tab-"+b.dataset.tab);
+  try{localStorage.setItem(KEY+"-tab",b.dataset.tab)}catch(e){}
+}));
+try{const t=localStorage.getItem(KEY+"-tab");if(t){const b=$(`nav.tabs button[data-tab="${t}"]`);b&&b.click()}}catch(e){}
+
+// ---------- profile binding ----------
+const FIELDS=["age","household","kids","filing","housing","car","job","payType","wage","hours","salary","gig","tips","other","taxRate","health","retire","saved","stepOverride"];
+function fillProfile(){FIELDS.forEach(f=>{const el=$("#"+f);if(el)el.value=S[f]??""});setTaxMode(S.taxMode,true);showPay()}
+FIELDS.forEach(f=>{const el=$("#"+f);el&&el.addEventListener("input",()=>{S[f]=el.value;if(f==="payType")showPay();touch()})});
+function showPay(){$$("[data-pay]").forEach(l=>l.hidden=l.dataset.pay!==S.payType)}
+function setTaxMode(m,quiet){S.taxMode=m;$("#taxAuto").setAttribute("aria-pressed",m==="auto");$("#taxManual").setAttribute("aria-pressed",m==="manual");$("#taxRateWrap").hidden=m!=="manual";if(!quiet)touch()}
+$("#taxAuto").onclick=()=>setTaxMode("auto");$("#taxManual").onclick=()=>setTaxMode("manual");
+
+function touch(){if(S.example){S.example=false}update();save()}
+
+// ---------- budget rows ----------
+function catOptions(sel){return Object.entries(CATS).map(([k,c])=>`<option value="${k}"${k===sel?" selected":"">${c.label}${c.wall?" (Four Walls)":""}</option>`).join("")}
+function renderBudget(){
+  const tb=$("#budgetRows");
+  const order=["housing","food","utilities","transport"];
+  tb.innerHTML=S.budget.map((r,i)=>{
+    const c=CATS[r.cat]||CATS.misc;
+    return `<tr class="${c.wall?"wall":""}" data-i="${i}">
+      <td><input aria-label="Category name" data-k="name" value="${(r.name||"").replace(/"/g,"&quot;")}" style="min-width:150px">
+        <select aria-label="Category type" data-k="cat" style="margin-top:4px;font-size:12px;padding:4px 6px">${catOptions(r.cat)}</select></td>
+      <td><span class="money"><input aria-label="Planned amount" data-k="amt" type="number" min="0" step="5" value="${r.amt}"></span></td>
+      <td class="note" style="margin:0">${c.label} ${r.cat==="debt"?"what's left":c.lo===c.hi?c.lo+"%":c.lo+"–"+c.hi+"%"}${c.wall?'<span class="tag">Wall</span>':""}</td>
+      <td data-pct></td>
+      <td><button class="x" aria-label="Remove ${r.name}" data-del>✕</button></td></tr>`}).join("");
+  tb.querySelectorAll("tr").forEach(tr=>{
+    const i=+tr.dataset.i;
+    tr.querySelectorAll("[data-k]").forEach(el=>el.addEventListener("input",()=>{
+      S.budget[i][el.dataset.k]=el.value; if(el.dataset.k==="cat"){renderBudget()} touch()}));
+    tr.querySelector("[data-del]").onclick=()=>{S.budget.splice(i,1);renderBudget();touch()};
+  });
+}
+$("#addCat").onclick=()=>{S.budget.push({name:"New category",cat:"misc",amt:""});renderBudget();touch()};
+
+// ---------- debts ----------
+function renderDebts(){
+  const tb=$("#debtRows");
+  tb.innerHTML=S.debts.map((d,i)=>`<tr data-i="${i}">
+    <td><input aria-label="Debt name" data-k="name" value="${(d.name||"").replace(/"/g,"&quot;")}" style="min-width:130px"></td>
+    <td><span class="money"><input aria-label="Balance" data-k="bal" type="number" min="0" value="${d.bal}"></span></td>
+    <td><span class="money"><input aria-label="Minimum payment" data-k="min" type="number" min="0" value="${d.min}"></span></td>
+    <td><input aria-label="Interest rate" data-k="rate" type="number" min="0" step="0.1" value="${d.rate}" style="width:70px"></td>
+    <td><button class="x" aria-label="Remove debt" data-del>✕</button></td></tr>`).join("")
+    || `<tr><td colspan="5" class="note">No debts listed. If that's true, you can skip Baby Step 2.</td></tr>`;
+  tb.querySelectorAll("tr[data-i]").forEach(tr=>{
+    const i=+tr.dataset.i;
+    tr.querySelectorAll("[data-k]").forEach(el=>el.addEventListener("input",()=>{S.debts[i][el.dataset.k]=el.value;touch()}));
+    tr.querySelector("[data-del]").onclick=()=>{S.debts.splice(i,1);renderDebts();touch()};
+  });
+}
+$("#addDebt").onclick=()=>{S.debts.push({name:"New debt",bal:"",min:"",rate:""});renderDebts();touch()};
+
+function snowball(extra){
+  let ds=S.debts.map(d=>({name:d.name||"Debt",bal:v(d.bal),min:v(d.min),r:v(d.rate)/1200})).filter(d=>d.bal>0).sort((a,b)=>a.bal-b.bal);
+  const totalMin=ds.reduce((s,d)=>s+d.min,0), budget=totalMin+extra;
+  let m=0;const done=[];
+  while(ds.some(d=>d.bal>0.005)&&m<600){
+    m++;let pool=budget;
+    ds.forEach(d=>{if(d.bal>0)d.bal+=d.bal*d.r});
+    ds.forEach(d=>{if(d.bal>0){const p=Math.min(d.min,d.bal,pool);d.bal-=p;pool-=p}});
+    for(const d of ds){if(d.bal>0&&pool>0){const p=Math.min(d.bal,pool);d.bal-=p;pool-=p}}
+    ds.forEach(d=>{if(d.bal<=0.005&&!d.month){d.month=m;done.push(d)}});
+  }
+  return {months:m>=600?null:m,done,totalMin,budget,stuck:m>=600};
+}
+const monthName=k=>{const d=new Date();d.setMonth(d.getMonth()+k);return d.toLocaleDateString("en-US",{month:"short",year:"numeric"})};
+
+// ---------- tips ----------
+function tipsFor(p){
+  const t=[];const age=v(S.age), hh=Math.max(1,v(S.household)), kids=v(S.kids);
+  if(p.gross>30000) t.push(["w",`Your yearly income is about ${fmt(p.gross)}, above the $30,000 this tool is built for. It still works, but some programs below may not apply.`]);
+  if(p.gross>0&&p.gross<=30000) t.push(["",`At about ${fmt(p.gross)} a year for ${hh} ${hh>1?"people":"person"}, check SNAP, energy assistance, and Medical Assistance or MinnesotaCare on MNbenefits.mn.gov.`]);
+  if(p.gross>0&&p.gross<=30000) t.push(["",`You likely qualify for free tax filing and possibly the Earned Income Tax Credit${kids?" and the Minnesota Child Tax Credit":""}. Those refunds can fund Baby Step 1 in one shot.`]);
+  if(S.car==="no") t.push(["","Metro Transit's Transit Assistance Program lets eligible riders pay $1 per ride on buses and light rail."]);
+  if(S.car==="loan") t.push(["w","Ramsey's advice on car loans: if the payment is large next to your income, consider selling and buying a cheaper car with cash."]);
+  if(age&&age<26) t.push(["","You can stay on a parent's health plan until age 26 if they have one."]);
+  if(age>=60) t.push(["","The Senior LinkAge Line (1-800-333-2433) helps older Minnesotans find benefits and save on Medicare."]);
+  if(S.housing==="shelter") t.push(["w","Stable housing comes before any other budget goal. Call 211 or Hennepin County's shelter line for help today."]);
+  if(v(S.retire)>0) t.push(["w","Dave Ramsey suggests pausing retirement contributions during Baby Steps 1–3 to free up cash. Keep any employer match in mind before you decide."]);
+  if(S.payType==="gig") t.push(["w","Gig workers owe self-employment tax and should set money aside for quarterly taxes."]);
+  if(S.payType==="hourly"&&v(S.wage)>0&&v(S.wage)<16.37) t.push(["w","Your wage is below the 2026 Minneapolis minimum of $16.37/hr. If you work in Minneapolis, contact the city's Labor Standards office."]]);
+  return t;
+}
+
+// ---------- steps ----------
+const STEPS=[
+  ["Save $1,000 for your starter emergency fund","Cash for surprises like a flat tire or a co-pay, so you don't borrow."],
+  ["Pay off all debt (except the house) using the debt snowball","Smallest balance first. Throw every extra dollar at it."],
+  ["Save 3–6 months of expenses","A full emergency fund."],
+  ["Invest 15% of household income in retirement",""],
+  ["Save for your children's college",""],
+  ["Pay off your home early",""],
+  ["Build wealth and give",""]
+];
+
+// ---------- update ----------
+function update(){
+  $("#exampleFlag").hidden=!S.example;
+  const p=pay();
+  const budgeted=S.budget.reduce((s,r)=>s+v(r.amt),0);
+  const left=p.take-budgeted;
+  $("#sTake").textContent=fmt(p.take);$("#sBud").textContent=fmt(budgeted);$("#sLeft").textContent=fmt(left);
+  const lb=$("#leftBig");lb.textContent=fmt(left);lb.className="left num "+(Math.abs(left)<1?"zero":left<0?"over":"under");
+
+  const mo=x=>fmt(x/12);
+  $("#payCalc").innerHTML=`
+    <div class="row"><span>Gross pay</span><span class="num">${mo(p.gross)}/mo · ${fmt(p.gross)}/yr</span></div>
+    ${S.taxMode==="auto"?`
+    <div class="row"><span>Federal income tax</span><span class="num">−${mo(p.tax.fed)}</span></div>
+    <div class="row"><span>Minnesota income tax</span><span class="num">−${mo(p.tax.mn)}</span></div>
+    <div class="row"><span>${S.payType==="gig"?"Self-employment + Medicare":"Social Security + Medicare"}</span><span class="num">−${mo(p.tax.fica)}</span></div>`
+    :`<div class="row"><span>Taxes at ${v(S.taxRate)}%</span><span class="num">−${mo(p.tax.total)}</span></div>`}
+    ${p.health?`<div class="row"><span>Health insurance</span><span class="num">−${mo(p.health)}</span></div>`:""}
+    ${p.retire?`<div class="row"><span>Retirement</span><span class="num">−${mo(p.retire)}</span></div>`:""}
+    ${v(S.other)?`<div class="row"><span>Benefits & support</span><span class="num">+${fmt(v(S.other))}</span></div>`:""}
+    <div class="row total"><span>Monthly take-home</span><span class="num">${fmt(p.take)}</span></div>`;
+  $("#taxNote").textContent=S.taxMode==="auto"?`Estimated total tax rate: ${p.rate.toFixed(1)}%. Rough 2026 estimate for a ${{single:"single",hoh:"head of household",mfj:"married joint"}[S.filing]} filer. Check it against a real pay stub.`:"Using the tax rate you entered.";
+  $("#tips").innerHTML=tipsFor(p).map(([c,x])=>`<li class="${c}">${x}</li>`).join("")||`<li>Fill in your age, household and pay to see what applies to you.</li>`;
+
+  // budget pct
+  $$("#budgetRows tr").forEach(tr=>{
+    const r=S.budget[+tr.dataset.i];if(!r)return;const c=CATS[r.cat]||CATS.misc;
+    const pct=p.take?v(r.amt)/p.take*100:0;const cell=tr.querySelector("[data-pct]");
+    let cls="ok";if(r.cat!=="debt"){if(pct>c.hi+0.5)cls="hi";else if(pct<c.lo-0.5)cls="lo"}
+    cell.innerHTML=v(r.amt)?`<span class="pill ${cls}">${pct.toFixed(0)}%</span>`:`<span class="note">—</span>`;
+  });
+
+  // debt
+  const extra=S.budget.filter(r=>r.cat==="debt").reduce((s,r)=>s+v(r.amt),0);
+  const sb=snowball(extra);
+  const totalDebt=S.debts.reduce((s,d)=>s+v(d.bal),0);
+  $("#snowSum").innerHTML=`
+    <div class="row"><span>Total debt</span><span class="num">${fmt(totalDebt)}</span></div>
+    <div class="row"><span>Minimum payments</span><span class="num">${fmt(sb.totalMin)}/mo</span></div>
+    <div class="row"><span>Extra from budget</span><span class="num">${fmt(extra)}/mo</span></div>
+    <div class="row total"><span>Debt-free</span><span class="num">${!totalDebt?"Already!":sb.stuck?"Payments too low":sb.months+" mo · "+monthName(sb.months)}</span></div>`;
+  $("#snowOrder").innerHTML=sb.done.map(d=>`<li><span>${d.name}</span><span class="num">paid ${monthName(d.month)}</span></li>`).join("")||`<li><span>Add debts to see your plan</span></li>`;
+
+  // steps
+  const saved=v(S.saved);const expenses=S.budget.filter(r=>!["saving","debt","giving"].includes(r.cat)).reduce((s,r)=>s+v(r.amt),0);
+  let cur=1;if(saved>=1000){cur=totalDebt>0?2:(saved>=expenses*3&&expenses>0?4:3)}
+  if(S.stepOverride!=="auto")cur=+S.stepOverride;
+  $("#sStep").textContent=cur;
+  $("#stepList").innerHTML=STEPS.map(([t,d],i)=>{
+    const n=i+1;let prog="";
+    if(n===1){const f=Math.min(1,saved/1000);prog=`<div class="bar"><i style="width:${f*100}%"></i></div><p class="num">${fmt(saved)} of $1,000${saved<1000&&p.take?` · about ${Math.ceil((1000-saved)/Math.max(1,S.budget.filter(r=>r.cat==="saving").reduce((s,r)=>s+v(r.amt),0)))} months at your saving rate`:""}</p>`}
+    if(n===2)prog=`<p class="num">${fmt(totalDebt)} owed${totalDebt&&!sb.stuck?` · debt-free by ${monthName(sb.months)}`:""}</p>`;
+    if(n===3&&expenses)prog=`<p class="num">Goal: ${fmt(expenses*3)}–${fmt(expenses*6)}</p>`;
+    if(n===4&&p.gross)prog=`<p class="num">15% = ${fmt(p.gross*.15/12)}/mo</p>`;
+    return `<li class="step ${n<cur?"done":n===cur?"now":""}"><span class="no">${n<cur?"✓":n}</span><div><b>${t}</b>${d?`<p>${d}</p>`:""}${prog}</div></li>`}).join("");
+}
+
+// ---------- resources ----------
+const RES=[
+  ["Any need","Minnesota 211","Free, confidential line to find food, rent, utility and shelter help near you.","Dial 211","https://www.211unitedway.org"],
+  ["Food & health","MNbenefits","One online application for SNAP food benefits, cash help, and child care assistance.","","https://mnbenefits.mn.gov"],
+  ["Heat & lights","Energy Assistance Program","Helps pay heating bills and fix broken furnaces. Apply in fall for the winter season.","Hennepin: through Community Action Partnership of Hennepin County","https://mn.gov/commerce/energy/consumer/energy-assistance/"],
+  ["Getting around","Metro Transit TAP","$1 rides on buses and light rail for riders who meet income guidelines. Bring photo ID and proof of income.","","https://www.metrotransit.org/tap"],
+  ["Debt & budgeting","LSS Financial Counseling","Free credit and debt counseling by phone, video, or in person. Spanish and Hmong speaking counselors.","(888) 577-2227","https://www.lssmn.org/financialcounseling"],
+  ["Taxes","Prepare + Prosper","Free tax prep for lower-income households in the Twin Cities, plus help claiming credits you're owed.","","https://www.prepareandprosper.org"],
+  ["Food","Second Harvest Heartland food finder","Find food shelves and free meals near your address.","","https://www.2harvest.org"],
+  ["Health coverage","MNsure","Medical Assistance and MinnesotaCare provide low-cost or free health coverage.","","https://www.mnsure.org"]
+];
+$("#resList").innerHTML=RES.map(([k,n,d,ph,u])=>`<article><span class="k">${k}</span><b>${n}</b><p>${d}</p>${ph?`<p class="ph">${ph}</p>`:""}<a href="${u}" target="_blank" rel="noopener">Visit site</a></article>`).join("");
+
+$("#clearAll").onclick=()=>{S=JSON.parse(JSON.stringify(BLANK));fillProfile();renderBudget();renderDebts();update();save()};
+
+fillProfile();renderBudget();renderDebts();update();
+})();
+</script>
+
+</body></html>
